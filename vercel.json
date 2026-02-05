@@ -1,5 +1,10 @@
 {
   "buildCommand": "npm run build",
   "outputDirectory": "dist",
-  "framework": "vite"
+  "framework": "vite",
+  "rewrites": [
+    { "source": "/login.html", "destination": "/src/pages/login.html" },
+    { "source": "/register.html", "destination": "/src/pages/register.html" },
+    { "source": "/space.html", "destination": "/src/pages/space.html" }
+  ]
 }
