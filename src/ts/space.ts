@@ -5,12 +5,10 @@
 
 import { getCurrentUser, subscribeAuth, getUserProfile } from "./auth";
 import { subscribeWishes, createWish, likeWish, hasLiked, getWish } from "./wishes";
-import type { Wish } from "./types";
 import {
   renderStars,
   openCreateWishModalFn,
   openWishModal,
-  closeWishModal,
   closeCreateWishModal,
   setCreateWishSubmitHandler,
   setWishModalLikeHandler,
@@ -19,7 +17,6 @@ import {
   bindCreateWishUI,
 } from "./ui";
 
-let currentWishes: Wish[] = [];
 let unsubscribeWishes: (() => void) | null = null;
 
 /**
@@ -44,7 +41,6 @@ export function initSpace(): void {
     document.getElementById("btn-create-wish")?.addEventListener("click", openCreateWishModalFn);
 
     unsubscribeWishes = subscribeWishes((wishes) => {
-      currentWishes = wishes;
       renderStars(wishes, onStarClick);
     });
   });
