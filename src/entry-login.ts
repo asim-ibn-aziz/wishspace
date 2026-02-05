@@ -1,5 +1,6 @@
 /**
  * Login page entry – auth check, form submit, redirect to space if already logged in.
+ * Intro popup open/close is handled by inline script in login.html so it works before the module loads.
  */
 import { subscribeAuth, signIn } from "./ts/auth";
 

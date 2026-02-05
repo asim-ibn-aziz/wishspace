@@ -16,10 +16,29 @@
   </script>
   <style>
     .bg-space { background: linear-gradient(180deg, #0a0a0f 0%, #0f0f1a 30%, #1a1a2e 60%, #16213e 100%); }
+    @keyframes fade-in-scale {
+      from { opacity: 0; transform: scale(0.95); }
+      to { opacity: 1; transform: scale(1); }
+    }
   </style>
 </head>
 <body class="min-h-screen bg-space text-gray-100 font-sans flex items-center justify-center p-4">
-  <div class="w-full max-w-md">
+  <!-- Intro popup (shown once per session before login) -->
+  <div id="intro-popup" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm">
+    <div class="bg-gray-900/95 border border-amber-500/30 rounded-2xl shadow-2xl shadow-amber-500/20 max-w-md w-full p-8 text-center animate-[fade-in-scale_0.35s_ease-out]">
+      <span class="text-4xl block mb-4" aria-hidden="true">⭐</span>
+      <h1 class="text-2xl font-bold bg-gradient-to-r from-amber-300 to-yellow-400 bg-clip-text text-transparent mb-2">WishSpace</h1>
+      <p class="text-amber-200/90 text-sm font-medium mb-4">Where wishes become stars</p>
+      <p class="text-gray-400 text-sm leading-relaxed mb-2">A place to say the things you can’t say out loud—the hopes you’re scared to share, the dreams you keep to yourself.</p>
+      <p class="text-gray-400 text-sm leading-relaxed mb-4">Drop a wish. It appears as a star in the sky. No feed, no pressure—just you and a sky full of other people’s wishes. Anonymous or not, it’s your safe little corner of the internet.</p>
+      <button type="button" id="intro-popup-enter" class="w-full py-3 rounded-lg bg-amber-500 hover:bg-amber-400 text-gray-900 font-semibold transition hover:shadow-lg hover:shadow-amber-500/30">
+        Enter the space
+      </button>
+      <p class="text-gray-500 text-xs mt-4">Log in or sign up to add your own star.</p>
+    </div>
+  </div>
+
+  <div id="login-card" class="w-full max-w-md hidden">
     <div class="bg-gray-900/80 backdrop-blur border border-gray-700/50 rounded-2xl shadow-2xl shadow-indigo-500/10 p-8">
       <h1 class="text-2xl font-bold text-center mb-2 bg-gradient-to-r from-amber-300 to-yellow-400 bg-clip-text text-transparent">WishSpace</h1>
       <p class="text-gray-400 text-center text-sm mb-6">Sign in to enter the space</p>
@@ -44,6 +63,27 @@
       </p>
     </div>
   </div>
+  <script>
+    (function() {
+      var key = 'wishspace-intro-seen';
+      var popup = document.getElementById('intro-popup');
+      var card = document.getElementById('login-card');
+      var btn = document.getElementById('intro-popup-enter');
+      function closeIntro() {
+        if (popup) popup.classList.add('hidden');
+        if (card) card.classList.remove('hidden');
+        try { sessionStorage.setItem(key, '1'); } catch (e) {}
+      }
+      if (sessionStorage.getItem(key)) {
+        if (popup) popup.classList.add('hidden');
+        if (card) card.classList.remove('hidden');
+      } else {
+        if (card) card.classList.add('hidden');
+        if (btn) btn.addEventListener('click', closeIntro);
+        if (popup) popup.addEventListener('click', function(e) { if (e.target === popup) closeIntro(); });
+      }
+    })();
+  </script>
   <script type="module" src="../entry-login.ts"></script>
 </body>
 </html>
