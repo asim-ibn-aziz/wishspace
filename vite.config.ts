@@ -21,7 +21,7 @@ export default defineConfig({
   publicDir: "public",
   plugins: [rewritePagesPlugin()],
   build: {
-    outDir: "public/dist",
+    outDir: "dist",
     emptyOutDir: true,
     rollupOptions: {
       input: {

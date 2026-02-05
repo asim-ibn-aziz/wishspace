@@ -28,7 +28,7 @@ You **don’t need a domain**. Vercel gives you a free URL like `wishspace.verce
 4. **Configure Project:**
    - **Framework Preset:** Vite (or leave as detected)
    - **Build Command:** `npm run build`
-   - **Output Directory:** `public/dist`
+   - **Output Directory:** `dist`
    - **Install Command:** `npm install` (default)
 5. **Environment Variables** – click **Add** and add these (copy values from your `.env`):
 
@@ -73,5 +73,5 @@ After this, sign in and sign up will work on your deployed app.
 
 ## Other options (optional)
 
-- **Netlify:** Same idea: connect repo, build command `npm run build`, publish directory `public/dist`, add the same env vars. You get a free URL like `something.netlify.app`. Add that URL to Firebase **Authorized domains**.
+- **Netlify:** Same idea: connect repo, build command `npm run build`, publish directory `dist`, add the same env vars. You get a free URL like `something.netlify.app`. Add that URL to Firebase **Authorized domains**.
 - **GitHub Pages:** Free and no card, but needs a bit more setup (Actions + base path). See the previous version of this file if you need it.

@@ -18,7 +18,7 @@ A frontend-only social space where each post is a **wish** shown as a ⭐ star. 
 
 3. **Run**
    - Dev: `npm run dev`, then open `http://localhost:5173/` or `http://localhost:5173/login.html`.
-   - Build: `npm run build`. Output is in `public/dist/`.
+   - Build: `npm run build`. Output is in `dist/`.
 
 4. **Deploy (free, no credit card)**  
    See [DEPLOY.md](./DEPLOY.md) for Vercel, Netlify, and GitHub Pages.
