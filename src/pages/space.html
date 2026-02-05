@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>WishSpace – Space</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: { sans: ['Inter', 'system-ui', 'sans-serif'] },
+          keyframes: {
+            twinkle: { '0%,100%': { opacity: 1, transform: 'scale(1)' }, '50%': { opacity: 0.7, transform: 'scale(1.05)' } },
+            'fade-in-scale': { '0%': { opacity: 0, transform: 'scale(0.95)' }, '100%': { opacity: 1, transform: 'scale(1)' } },
+            'zoom-in': { '0%': { opacity: 0, transform: 'scale(0.5)' }, '100%': { opacity: 1, transform: 'scale(1)' } }
+          },
+          animation: { 'twinkle': 'twinkle 2s ease-in-out infinite', 'fade-in-scale': 'fade-in-scale 0.3s ease-out', 'zoom-in': 'zoom-in 0.25s ease-out' }
+        }
+      }
+    };
+  </script>
+  <style>
+    .bg-space {
+      background: linear-gradient(180deg, #0a0a0f 0%, #0f0f1a 30%, #1a1a2e 60%, #16213e 100%);
+      position: relative;
+    }
+    /* Space background layer – white dots */
+    #space-dots {
+      position: absolute;
+      inset: 0;
+      overflow: hidden;
+      pointer-events: none;
+    }
+    .space-dot {
+      position: absolute;
+      width: 2px;
+      height: 2px;
+      background: #fff;
+      border-radius: 50%;
+      box-shadow: 0 0 4px rgba(255,255,255,0.5);
+      animation: space-dot-drift 180s ease-in-out infinite;
+    }
+    .space-dot:nth-child(odd) { animation-duration: 220s; animation-direction: reverse; }
+    .space-dot:nth-child(3n) { animation-duration: 200s; }
+    .space-dot:nth-child(5n) { animation-duration: 240s; animation-direction: reverse; }
+    @keyframes space-dot-drift {
+      0%, 100% { transform: translate(0, 0); opacity: 0.5; }
+      25% { transform: translate(4px, -3px); opacity: 0.9; }
+      50% { transform: translate(-3px, 4px); opacity: 0.6; }
+      75% { transform: translate(3px, 3px); opacity: 0.85; }
+    }
+    @keyframes star-fade-in {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    .star-fade-in { animation: star-fade-in 0.4s ease-out forwards; }
+  </style>
+</head>
+<body class="min-h-screen bg-space text-gray-100 font-sans overflow-hidden">
+  <div id="space-dots" aria-hidden="true"></div>
+  <div id="space-stars" class="absolute inset-0 w-full h-full"></div>
+
+  <button id="btn-logout" type="button" class="fixed top-3 right-3 sm:top-4 sm:right-4 z-20 px-3 py-2 sm:px-4 rounded-lg bg-gray-800/80 border border-gray-600 hover:border-amber-500/50 text-gray-300 hover:text-amber-400 transition text-sm font-medium touch-manipulation">
+    Logout
+  </button>
+
+  <button id="btn-create-wish" type="button" class="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 z-20 px-5 py-3 sm:px-6 rounded-full bg-amber-500 hover:bg-amber-400 text-gray-900 font-semibold shadow-lg shadow-amber-500/30 hover:shadow-amber-400/40 transition hover:scale-105 active:scale-95 touch-manipulation">
+    + Create Wish
+  </button>
+
+  <!-- Wish view modal -->
+  <div id="modal-wish" class="fixed inset-0 z-30 hidden flex items-center justify-center p-4" aria-modal="true">
+    <div id="modal-wish-overlay" class="absolute inset-0 bg-black/60 backdrop-blur-sm"></div>
+    <div class="relative bg-gray-900 border border-gray-700 rounded-2xl shadow-2xl max-w-md w-full p-4 sm:p-6 mx-2 animate-zoom-in max-h-[90vh] overflow-y-auto">
+      <button id="modal-wish-close" type="button" class="absolute top-4 right-4 text-gray-400 hover:text-white transition" aria-label="Close">&times;</button>
+      <p id="modal-wish-text" class="text-lg text-gray-100 mb-2 pr-8"></p>
+      <p id="modal-wish-author" class="text-sm text-gray-400 mb-4"></p>
+      <div class="flex items-center gap-2">
+        <button id="modal-wish-like" type="button" class="flex items-center gap-2 px-4 py-2 rounded-lg bg-gray-800 hover:bg-gray-700 text-red-400 transition">
+          <span aria-hidden="true">❤</span>
+          <span id="modal-wish-like-count">0</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Create wish modal -->
+  <div id="modal-create-wish" class="fixed inset-0 z-30 hidden flex items-center justify-center p-4" aria-modal="true">
+    <div id="modal-create-overlay" class="absolute inset-0 bg-black/60 backdrop-blur-sm"></div>
+    <div class="relative bg-gray-900 border border-gray-700 rounded-2xl shadow-2xl max-w-md w-full p-4 sm:p-6 mx-2 animate-fade-in-scale max-h-[90vh] overflow-y-auto">
+      <h2 class="text-xl font-semibold mb-4">Create Wish</h2>
+      <form id="form-create-wish" class="space-y-4">
+        <div>
+          <textarea id="create-wish-text" rows="4" maxlength="200" placeholder="Your wish..."
+            class="w-full px-4 py-3 rounded-lg bg-gray-800 border border-gray-600 focus:border-amber-500 focus:ring-2 focus:ring-amber-500/30 outline-none transition text-white placeholder-gray-500 resize-none"></textarea>
+          <p id="create-wish-char-count" class="text-right text-sm text-gray-500 mt-1">0 / 200</p>
+        </div>
+        <label class="flex items-center gap-2 cursor-pointer">
+          <input id="create-wish-anonymous" type="checkbox" class="rounded border-gray-600 bg-gray-800 text-amber-500 focus:ring-amber-500" />
+          <span class="text-sm text-gray-400">Post anonymously</span>
+        </label>
+        <div class="flex gap-3">
+          <button id="modal-create-close" type="button" class="flex-1 py-2 rounded-lg border border-gray-600 text-gray-400 hover:bg-gray-800 transition">Cancel</button>
+          <button id="create-wish-submit" type="submit" class="flex-1 py-2 rounded-lg bg-amber-500 hover:bg-amber-400 text-gray-900 font-semibold transition">Submit</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script type="module" src="../entry-space.ts"></script>
+</body>
+</html>
